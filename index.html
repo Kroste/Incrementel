@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singularität</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-root">
+        <canvas id="stage"></canvas>
+
+        <!-- Top HUD -->
+        <header id="hud">
+            <div class="stat-block">
+                <div class="stat-label">Masse</div>
+                <div class="stat-value" id="stat-mass">0</div>
+                <div class="stat-sub" id="stat-mps">+0/s</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Dark Matter</div>
+                <div class="stat-value dm" id="stat-dm">0</div>
+                <div class="stat-sub" id="stat-dm-mult">×1.00 Multiplikator</div>
+            </div>
+            <div class="stat-block hidden" id="stat-kosmos-block">
+                <div class="stat-label">Kosmos</div>
+                <div class="stat-value kosmos" id="stat-kosmos">0</div>
+                <div class="stat-sub" id="stat-kosmos-mult">Multiverse aktiv</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Kollaps bringt</div>
+                <div class="stat-value pending" id="stat-collapse-gain">0</div>
+                <div class="stat-sub" id="stat-collapse-req">benötigt: 1e6 Masse</div>
+            </div>
+            <div class="stat-block toolbar">
+                <button id="btn-info" title="Über / Support">ⓘ</button>
+                <button id="btn-save" title="Speichern">💾</button>
+                <button id="btn-reset" title="Hard-Reset (löscht alles)">☠</button>
+                <button id="btn-mute" title="Mute">🔊</button>
+            </div>
+        </header>
+
+        <!-- Bottom center: Collapse + Big-Bang buttons -->
+        <div id="collapse-bar">
+            <button id="btn-collapse" disabled>
+                <span class="label">KOLLAPS</span>
+                <span class="sub">+<span id="collapse-btn-gain">0</span> Dark Matter</span>
+            </button>
+            <button id="btn-multiverse" class="hidden" disabled>
+                <span class="label">BIG BANG</span>
+                <span class="sub">+<span id="mult-btn-gain">0</span> Kosmos</span>
+            </button>
+        </div>
+
+        <!-- Event banner (top center over play field) -->
+        <div id="event-banner" class="hidden">
+            <div class="event-head">
+                <span class="event-icon" id="event-icon">☄</span>
+                <div>
+                    <div class="event-title" id="event-title">Meteoritenschauer</div>
+                    <div class="event-desc" id="event-desc">Massiver Partikel-Strom</div>
+                </div>
+                <div class="event-time" id="event-time">25s</div>
+            </div>
+            <div class="event-progress"><div class="event-progress-bar" id="event-bar"></div></div>
+        </div>
+
+        <!-- Right side: Shop -->
+        <aside id="shop">
+            <div class="tabs">
+                <button class="tab active" data-tab="upgrades">Upgrades</button>
+                <button class="tab" data-tab="particles">Partikel</button>
+                <button class="tab" data-tab="dark">DM</button>
+                <button class="tab hidden" id="tab-multiverse" data-tab="multiverse">MV</button>
+                <button class="tab" data-tab="stats">Stats</button>
+            </div>
+            <div class="tab-panel active" id="panel-upgrades"></div>
+            <div class="tab-panel" id="panel-particles"></div>
+            <div class="tab-panel" id="panel-dark"></div>
+            <div class="tab-panel" id="panel-multiverse"></div>
+            <div class="tab-panel" id="panel-stats"></div>
+        </aside>
+
+        <!-- Achievement toast -->
+        <div id="toast-container"></div>
+
+        <!-- Info / Support modal -->
+        <div id="info-modal" class="modal hidden">
+            <div class="modal-content info">
+                <h2>Singularität</h2>
+                <div class="info-version">Version 1.0.0</div>
+                <p>Ein 2D-Incremental um ein wachsendes schwarzes Loch. Vanilla-JS, keine Dependencies.</p>
+                <div class="info-links">
+                    <a class="info-btn github" href="https://github.com/Kroste/Incrementel" target="_blank" rel="noopener noreferrer">
+                        <span class="glyph">◆</span>
+                        <span>GitHub: Kroste/Incrementel</span>
+                    </a>
+                    <a class="info-btn bmc" href="https://www.buymeacoffee.com/kroste" target="_blank" rel="noopener noreferrer">
+                        <span class="glyph">☕</span>
+                        <span>Buy me a coffee</span>
+                    </a>
+                </div>
+                <p class="info-credits">Lars Oste · <a href="mailto:lars-oste@gmx.de">lars-oste@gmx.de</a></p>
+                <button id="btn-info-close">Schließen</button>
+            </div>
+        </div>
+
+        <!-- Offline welcome-back -->
+        <div id="offline-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Willkommen zurück</h2>
+                <p>Während deiner Abwesenheit (<span id="offline-time">-</span>) hat deine Singularität weiter Masse gesammelt:</p>
+                <div class="offline-gain" id="offline-amount">+0 Masse</div>
+                <button id="btn-offline-ok">Weiter</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
