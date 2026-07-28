@@ -71,6 +71,18 @@ const typeById = Object.fromEntries(PARTICLE_TYPES.map(t => [t.id, t]));
 
 const UPGRADES = [
     {
+        id: 'gravity', name: 'Gravitations-Feld', icon: 'G',
+        desc: 'Reichweite und Stärke der Anziehung. Partikel driften schneller ins Zentrum.',
+        baseCost: 15, growth: 1.18, maxLevel: 200,
+        effect: lvl => ({ label: `+${(lvl * 12)}% Reichweite / +${(lvl * 8)}% Kraft` }),
+    },
+    {
+        id: 'absorb', name: 'Ereignis-Horizont', icon: 'H',
+        desc: 'Absorptions-Radius der Singularität. Größerer Horizont schluckt Partikel früher.',
+        baseCost: 40, growth: 1.22, maxLevel: 100,
+        effect: lvl => ({ label: `+${(lvl * 2).toFixed(0)} px Radius` }),
+    },
+    {
         id: 'yield', name: 'Massen-Kondensator', icon: 'M',
         desc: 'Jedes absorbierte Partikel liefert mehr Masse.',
         baseCost: 25, growth: 1.25, maxLevel: 300,
@@ -198,7 +210,7 @@ const ACHIEVEMENTS = [
     { id: 'postCosmic', title: 'Jenseits des Kosmos',   desc: 'Entdecke deinen ersten Post-Kosmos-Partikel.',          check: s => PARTICLE_TYPES.some(t => (t.reqMV || 0) > 0 && s.discoveredTypes[t.id]) },
     { id: 'click100',   title: 'Fleißiger Finger',      desc: 'Löse 100 Klick-Impulse aus.',                           check: s => s.stats.clicks >= 100 },
     { id: 'auto10',     title: 'Automatisiert',         desc: 'Baue 10 Auto-Kollektoren.',                             check: s => (s.upgrades.auto || 0) >= 10 },
-    { id: 'horizonBig', title: 'Alles verschluckend',   desc: 'Fülle mit dem Ereignis-Horizont den Bildschirm (Auto-Trigger).', check: s => s.stats.autoTriggered >= 1 },
+    { id: 'gravity50',  title: 'Schwerkraft-Fanatiker', desc: 'Bringe das Gravitations-Feld auf Level 50.',            check: s => (s.upgrades.gravity || 0) >= 50 },
     { id: 'dm10',       title: 'Dunkelheit',            desc: 'Sammle 10 Dark Matter.',                                check: s => s.darkMatter >= 10 },
     { id: 'dm100',      title: 'Kosmische Präsenz',     desc: 'Sammle 100 Dark Matter.',                               check: s => s.darkMatter >= 100 },
     { id: 'firstEvent', title: 'Anomalie',              desc: 'Erlebe dein erstes Chaos-Event.',                       check: s => s.stats.eventsTriggered >= 1 },
@@ -271,17 +283,7 @@ const runtime = {
     event: null,          // {def, endsAt, startedAt}
     nextEventAt: now() + 45_000,   // erstes Event nach ~45s
     goldenParticle: null, // spezielles Golden-Partikel wenn 'golden'-Event aktiv
-    // Auto-Big-Bang bei ausgefülltem Bildschirm
-    criticalSince: null,  // Timestamp seit wann der Horizont über der Trigger-Schwelle liegt
-    autoTriggerDelay: 2000,
 };
-
-const AUTO_TRIGGER_FRACTION = 0.45;   // Radius >= 45% der kürzeren Bildschirmseite → Trigger
-
-function autoTriggerRadius() {
-    const c = els.canvas;
-    return Math.min(c.clientWidth, c.clientHeight) * AUTO_TRIGGER_FRACTION;
-}
 
 // ---------------------------------------------------------------------------
 // DERIVED / EFFECTIVE STATS  (computed each frame from upgrade levels)
@@ -307,29 +309,18 @@ function eff() {
         Object.assign(evMod, runtime.event.def.modifiers);
     }
 
+    const gravLvl   = u.gravity   || 0;
+    const absLvl    = u.absorb    || 0;
     const yldLvl    = u.yield     || 0;
     const spawnLvl  = u.spawn     || 0;
     const clickLvl  = u.click     || 0;
     const autoLvl   = u.auto      || 0;
     const apLvl     = u.autoPower || 0;
 
-    // Auto-Growth: absorb/gravity skalieren mit der aktuell gesammelten Masse.
-    // absorb: quadratische Rampe über log(mass), erreicht die Trigger-Schwelle bei ~1e12.
-    // gravity: log-Skala, immer noch stark aber deutlich milder als das alte Level-Upgrade.
-    const canvas = els.canvas;
-    const trigger = canvas ? Math.min(canvas.clientWidth, canvas.clientHeight) * AUTO_TRIGGER_FRACTION : 400;
-    const massScale = Math.log10(Math.max(1, state.mass) + 10);   // 1..20+
-    const t = Math.pow(massScale / 20, 3);                          // 1.0 bei mass=1e20 (Sextillion)
-    const rawAbsorb = 34 + t * (trigger - 34);                      // kann trigger übersteigen
-    const capped    = Math.min(rawAbsorb, trigger);
-    const rawReach  = 220 + massScale * 140;                        // bei 1e20: ~3020 px
-    const rawForce  = 34 + massScale * 22;                          // bei 1e20: ~474
-
     return {
-        gravReach : rawReach * evMod.gravMult,
-        gravForce : rawForce * evMod.gravMult,
-        absorbRadius: capped * evMod.absorbMult,
-        absorbRawUncapped: rawAbsorb,   // für Trigger-Check
+        gravReach : (220 + gravLvl * 26) * evMod.gravMult,
+        gravForce : (34  + gravLvl * 6)  * evMod.gravMult,
+        absorbRadius: (34 + absLvl * 2) * evMod.absorbMult,
         yieldMult: (1 + yldLvl * 0.35) * dmMult * mvConstant * evMod.yieldMult,
         spawnPerSec: (2 + spawnLvl * 1.5) * dmSpawn * evMod.spawnMult,
         clickRadius: 60 + clickLvl * 12,
@@ -682,32 +673,6 @@ function unlockParticle(id) {
     }
     renderShop();
     playBuy();
-}
-
-/** Prüft ob der Ereignis-Horizont die Trigger-Schwelle erreicht hat und löst nach
- *  einer Debouncing-Delay den bestmöglichen Prestige aus (Big Bang > Kollaps). */
-function checkAutoPrestige() {
-    const trigger = autoTriggerRadius();
-    const raw = eff().absorbRawUncapped;
-    if (raw >= trigger) {
-        if (runtime.criticalSince === null) runtime.criticalSince = now();
-        const held = now() - runtime.criticalSince;
-        if (held >= runtime.autoTriggerDelay) {
-            let triggered = false;
-            if (multiverseUnlocked() && canMultiverse()) {
-                performMultiverse();
-                triggered = true;
-            } else if (canCollapse()) {
-                performCollapse();
-                triggered = true;
-            }
-            if (triggered) state.stats.autoTriggered = (state.stats.autoTriggered || 0) + 1;
-            // Falls keins möglich: criticalSince bleibt, aber Radius ist visuell gecappt.
-            runtime.criticalSince = null;
-        }
-    } else {
-        runtime.criticalSince = null;
-    }
 }
 
 /** Auto-buy pass. Kauft Upgrades und (Lv2+) Partikel-Rediscovers.
@@ -1211,22 +1176,6 @@ function drawSingularity(ctx) {
     ctx.strokeStyle = `hsla(${runtime.hueShift + 200}, 100%, 75%, 0.5)`;
     ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(cx, cy, e.absorbRadius + 1, 0, Math.PI * 2); ctx.stroke();
-
-    // Critical-State: pulsierender roter Warn-Rim während 2s-Delay bis Auto-Trigger
-    if (runtime.criticalSince !== null) {
-        const held = now() - runtime.criticalSince;
-        const prog = Math.min(1, held / runtime.autoTriggerDelay);
-        const pulse = 0.5 + 0.5 * Math.sin(now() / 60);
-        ctx.strokeStyle = `rgba(239, 68, 68, ${0.35 + pulse * 0.5})`;
-        ctx.lineWidth = 3 + pulse * 5;
-        ctx.beginPath(); ctx.arc(cx, cy, e.absorbRadius + 8, 0, Math.PI * 2); ctx.stroke();
-        // Progress-Arc über dem Horizont
-        ctx.strokeStyle = `rgba(239, 68, 68, 0.9)`;
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.arc(cx, cy, e.absorbRadius + 16, -Math.PI / 2, -Math.PI / 2 + prog * Math.PI * 2);
-        ctx.stroke();
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1245,9 +1194,6 @@ function grabElements() {
     els.statCollapseReq  = document.getElementById('stat-collapse-req');
     els.btnCollapse = document.getElementById('btn-collapse');
     els.collapseBtnGain = document.getElementById('collapse-btn-gain');
-    els.horizonBlock = document.getElementById('horizon-block');
-    els.statHorizon = document.getElementById('stat-horizon');
-    els.horizonFill = document.getElementById('horizon-fill');
     els.btnMultiverse = document.getElementById('btn-multiverse');
     els.multBtnGain = document.getElementById('mult-btn-gain');
     els.statKosmosBlock = document.getElementById('stat-kosmos-block');
@@ -1339,15 +1285,6 @@ function updateHUD(dt) {
         els.multBtnGain.textContent = fmt(mg);
         els.btnMultiverse.disabled = !canMultiverse();
     }
-
-    // Horizont-Block
-    const eNow = eff();
-    const trigger = autoTriggerRadius();
-    const raw = eNow.absorbRawUncapped;
-    const pct = Math.min(1, raw / trigger);
-    els.statHorizon.textContent = raw.toFixed(0) + 'px';
-    els.horizonFill.style.width = (pct * 100).toFixed(1) + '%';
-    els.horizonBlock.classList.toggle('critical', runtime.criticalSince !== null);
 
     // Event-Banner
     if (runtime.event && runtime.event.endsAt > now()) {
@@ -1773,8 +1710,6 @@ function loop() {
         }
     }
 
-    // Auto-Big-Bang bei ausgefülltem Bildschirm
-    checkAutoPrestige();
 
     render();
     updateHUD(dtRaw);

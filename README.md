@@ -55,29 +55,15 @@ skaliert.
 
 ---
 
-## Automatisches Wachstum
-
-**Ereignis-Horizont** und **Gravitations-Feld** sind keine kaufbaren Upgrades
-mehr – sie wachsen logarithmisch mit deiner aktuellen Masse. Je mehr das
-schwarze Loch enthält, desto größer sein Absorb-Radius und desto stärker sein
-Sog. Nach einem Kollaps oder Big Bang schrumpft es entsprechend wieder.
-
-Der aktuelle Wert und der Fortschritt bis zum **Auto-Big-Bang** stehen im
-HUD im Block „Horizont". Sobald der Horizont die Trigger-Schwelle
-(45 % der kürzeren Bildschirmseite) erreicht, beginnt eine 2-Sekunden-Warnung
-(pulsierender roter Rim, oranger Ring über dem Horizont). Danach:
-
-- **canMultiverse** → automatischer Big Bang
-- sonst falls **canCollapse** → automatischer Kollaps
-- sonst → Horizont bleibt visuell gecappt, kein Reset
-
 ## Upgrades (Masse)
 
-Fünf Upgrades im Tab **Upgrades**. Jedes hat sein spezifisches Growth –
+Sieben Upgrades im Tab **Upgrades**. Jedes hat sein spezifisches Growth –
 Frühkauf-Bias, wenn du klickst und knapp bei Kasse bist:
 
 | Upgrade                | Was es tut                                          |
 | ---------------------- | --------------------------------------------------- |
+| **Gravitations-Feld**  | Reichweite + Kraft der Anziehung                    |
+| **Ereignis-Horizont**  | Größerer Absorb-Radius                              |
 | **Massen-Kondensator** | Jedes Partikel gibt mehr Masse                      |
 | **Partikel-Generator** | Mehr Partikel pro Sekunde                           |
 | **Klick-Impuls**       | Wave-Radius und Klick-Ertrag                        |

@@ -122,23 +122,6 @@ html, body {
 .stat-value.kosmos { color: var(--kosmos); text-shadow: 0 0 8px rgba(253, 224, 71, 0.4); }
 .stat-value.pending { color: var(--accent-2); }
 
-/* Horizon-Block */
-.horizon-block .stat-value { font-size: 18px; }
-.horizon-bar {
-    height: 4px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    margin-top: 6px;
-    overflow: hidden;
-}
-.horizon-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 60%, var(--danger) 100%);
-    width: 0%;
-    transition: width 0.15s linear;
-}
-.horizon-block.critical { border-color: var(--danger); box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); animation: horizon-pulse 0.6s ease-in-out infinite; }
-@keyframes horizon-pulse { 0%,100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 0 24px rgba(239, 68, 68, 0.8); } }
 
 .stat-sub {
     font-size: 11px;
