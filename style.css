@@ -122,6 +122,24 @@ html, body {
 .stat-value.kosmos { color: var(--kosmos); text-shadow: 0 0 8px rgba(253, 224, 71, 0.4); }
 .stat-value.pending { color: var(--accent-2); }
 
+/* Horizon-Block */
+.horizon-block .stat-value { font-size: 18px; }
+.horizon-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+.horizon-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 60%, var(--danger) 100%);
+    width: 0%;
+    transition: width 0.15s linear;
+}
+.horizon-block.critical { border-color: var(--danger); box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); animation: horizon-pulse 0.6s ease-in-out infinite; }
+@keyframes horizon-pulse { 0%,100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 0 24px rgba(239, 68, 68, 0.8); } }
+
 .stat-sub {
     font-size: 11px;
     color: var(--fg-2);
@@ -400,6 +418,60 @@ html, body {
     margin-top: 2px;
 }
 
+/* Auto-Buy Toggle — absolut in die Card-Ecke, damit sie nicht ins Flex-Header eingreift */
+.upgrade, .particle-card { position: relative; }
+.auto-toggle {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 2;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg-2);
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.12s;
+}
+.auto-toggle:hover { color: var(--fg-0); border-color: var(--gold); }
+.auto-toggle.on {
+    background: rgba(251, 191, 36, 0.14);
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.35);
+}
+/* Header-Level etwas nach links rücken, damit's nicht unter dem Toggle sitzt */
+.upgrade-header .upgrade-level { padding-right: 28px; }
+
+/* Reserve-Block (Auto-Buy Lv 3) */
+.reserve-block {
+    background: var(--bg-1);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+}
+.reserve-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 6px;
+    letter-spacing: 0.06em;
+}
+.reserve-label > span:last-child { font-variant-numeric: tabular-nums; color: var(--fg-0); }
+.reserve-block input[type="range"] {
+    width: 100%;
+    accent-color: var(--gold);
+    cursor: pointer;
+}
+.reserve-hint { font-size: 10px; color: var(--fg-2); margin-top: 4px; line-height: 1.4; }
+
 /* Particle unlock cards */
 .particle-card {
     display: flex;
@@ -421,6 +493,9 @@ html, body {
 
 .particle-card.disabled { cursor: not-allowed; opacity: 0.5; }
 .particle-card.owned { border-color: var(--ok); }
+.particle-card.rediscover { border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold); }
+.particle-card.rediscover:hover { background: var(--bg-2); }
+.particle-card.locked-mv .particle-swatch { filter: grayscale(1) brightness(0.5); box-shadow: none; }
 
 .particle-swatch {
     width: 32px;

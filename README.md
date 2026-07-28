@@ -55,15 +55,29 @@ skaliert.
 
 ---
 
+## Automatisches Wachstum
+
+**Ereignis-Horizont** und **Gravitations-Feld** sind keine kaufbaren Upgrades
+mehr – sie wachsen logarithmisch mit deiner aktuellen Masse. Je mehr das
+schwarze Loch enthält, desto größer sein Absorb-Radius und desto stärker sein
+Sog. Nach einem Kollaps oder Big Bang schrumpft es entsprechend wieder.
+
+Der aktuelle Wert und der Fortschritt bis zum **Auto-Big-Bang** stehen im
+HUD im Block „Horizont". Sobald der Horizont die Trigger-Schwelle
+(45 % der kürzeren Bildschirmseite) erreicht, beginnt eine 2-Sekunden-Warnung
+(pulsierender roter Rim, oranger Ring über dem Horizont). Danach:
+
+- **canMultiverse** → automatischer Big Bang
+- sonst falls **canCollapse** → automatischer Kollaps
+- sonst → Horizont bleibt visuell gecappt, kein Reset
+
 ## Upgrades (Masse)
 
-Sieben Upgrades im Tab **Upgrades**. Jedes hat sein spezifisches Growth –
+Fünf Upgrades im Tab **Upgrades**. Jedes hat sein spezifisches Growth –
 Frühkauf-Bias, wenn du klickst und knapp bei Kasse bist:
 
 | Upgrade                | Was es tut                                          |
 | ---------------------- | --------------------------------------------------- |
-| **Gravitations-Feld**  | Reichweite + Kraft der Anziehung                    |
-| **Ereignis-Horizont**  | Größerer Absorb-Radius                              |
 | **Massen-Kondensator** | Jedes Partikel gibt mehr Masse                      |
 | **Partikel-Generator** | Mehr Partikel pro Sekunde                           |
 | **Klick-Impuls**       | Wave-Radius und Klick-Ertrag                        |
@@ -77,9 +91,12 @@ jedem Zyklus dank Dark-Matter-Boni schneller wieder hoch.
 
 ## Partikel-Typen
 
-Im Tab **Partikel** siehst du acht Materie-Klassen mit steigendem Wert. Jede
-wird bei einer bestimmten Gesamt-Masse *entdeckbar* und muss dann einmalig
-freigeschaltet werden:
+Im Tab **Partikel** siehst du bis zu **14 Materie-Klassen** mit steigendem
+Wert. Die Grund-Klassen sind ab Runde 1 verfügbar, sechs weitere schalten
+sich nach Big Bangs auf. Jede Klasse muss pro Zyklus einmal freigeschaltet
+werden.
+
+### Basis-Klassen (Runde 1)
 
 | Typ              | Wert (Basis) | Freischalt-Schwelle |
 | ---------------- | ------------ | -------------------- |
@@ -92,8 +109,33 @@ freigeschaltet werden:
 | Exotische Mat.   | 180 K        | 8 M                  |
 | Kosmische Energie| 1,6 M        | 120 M                |
 
-Freischaltungen bleiben **über alle Prestiges hinweg erhalten** – einmal
-entdeckte Materie ist Wissen des Multiversums.
+### Post-Kosmos-Klassen (per Big Bang)
+
+Jeder Big Bang schaltet einen neuen High-Tier frei:
+
+| Typ              | Wert         | Freischalt-Schwelle | Verfügbar nach |
+| ---------------- | ------------ | -------------------- | -------------- |
+| Dunkelmaterie    | 12 M         | 1 B                  | 1. Big Bang    |
+| Void-Kristall    | 90 M         | 8 B                  | 2. Big Bang    |
+| Chronon          | 700 M        | 60 B                 | 3. Big Bang    |
+| Singulon         | 5,4 B        | 400 B                | 4. Big Bang    |
+| Ur-Photon        | 42 B         | 3 T                  | 5. Big Bang    |
+| Meta-Boson       | 340 B        | 20 T                 | 6. Big Bang    |
+
+### Discovery & Re-Unlock
+
+- Ein **Kollaps** oder **Big Bang** setzt alle Freischaltungen der aktuellen
+  Runde zurück (nur Wasserstoff bleibt).
+- Was du **jemals entdeckt hast**, bleibt aber „bekannt" – die Wiederentdeckung
+  in späteren Runden kostet **nur 30 %** der Original-Kosten und **umgeht das
+  Massen-Gate**.
+- Der Panel-Header zeigt deinen Discovery-Fortschritt (`x/14 entdeckt`). Karten
+  mit gelbem Balken sind Re-Discover-Kandidaten, grüne sind aktiv
+  freigeschaltet, verborgene Post-Kosmos-Tiers erscheinen als `???`.
+
+Praktisch bedeutet das: jeder Zyklus hat einen sinnvollen Partikel-Sprint als
+Ziel, aber Ex-Multi-Millionäre klopfen ihre Basis-Kette in wenigen Sekunden
+wieder frei.
 
 ---
 
@@ -115,6 +157,7 @@ Dark-Matter-Upgrades (Tab **DM**):
 - **Kollaps-Effizienz** – mehr DM pro Kollaps
 - **Seltenheits-Sog** – seltene Partikel häufiger
 - **Zeit-Anker** – bessere Offline-Progression
+- **Automat** – schaltet Auto-Buy frei (siehe Abschnitt „Automat" unten)
 
 **Tipp:** Der erste Kollaps ist ca. 10–15 min Spielzeit, danach beschleunigt
 sich der Loop massiv.
@@ -150,6 +193,29 @@ Multiverses stackt die Kosmische Konstante alle anderen Systeme multiplikativ
 
 ---
 
+## Automat (Auto-Buy)
+
+Freischalt-Pfad: Kauf das DM-Upgrade **Automat** (max. Lv 3, 3 Stufen à zunehmende Kosten).
+
+| Level | Was du bekommst                                                          |
+| ----- | ------------------------------------------------------------------------ |
+| **1** | ⚡-Toggle in der Ecke jeder Masse-Upgrade-Card. Aktivierte Upgrades werden **alle 500 ms** gekauft, sobald sie sich leisten. |
+| **2** | Zusätzlich ⚡-Toggle auf Partikel-Cards für **Auto-Rediscover** (nur bereits entdeckte Typen). |
+| **3** | Intervall verkürzt auf **100 ms** + **Massen-Reserve-Slider** oben im Upgrades-Panel. |
+
+Der Reserve-Slider (0–90 %) sagt: Auto-Buy darf nur kaufen, wenn die Kosten
+unter dem konfigurierten Anteil deiner aktuellen Masse liegen. Beispiel: bei
+50 % Reserve und 1 M Masse werden nur Upgrades bis 500 K Kosten gekauft –
+du behältst also Puffer für Kollapse oder Big Bangs.
+
+Toggle-Zustände und Reserve-Wert bleiben im Save. Kollaps/Big Bang deaktivieren
+sie nicht — nach dem Reset läuft die Automatik direkt wieder los, sobald du
+dir deine Upgrades wieder leisten kannst.
+
+Kein Sound bei Auto-Käufen, damit's im Idle-Betrieb nicht nervt.
+
+---
+
 ## Chaos-Events
 
 Alle 90–180 s (kürzer mit Anomalie-Frequenz-Upgrade) taucht ein temporäres
@@ -179,9 +245,10 @@ es nach ca. 15 s wieder – sei aufmerksam, wenn das Banner erscheint.
 
 ## Achievements
 
-12 Achievements im Tab **Stats**. Sie sind reine „Trophäen" (keine
+18 Achievements im Tab **Stats**. Sie sind reine „Trophäen" (keine
 mechanischen Effekte), decken aber die wichtigsten Meilensteine ab: erste
-Masse, erste Kollapse, erster Big Bang, Erwischen eines Golden Cores, etc.
+Masse, erste Kollapse, erster Big Bang, Erwischen eines Golden Cores,
+komplette Materie-Bibliothek, Jenseits des Kosmos etc.
 
 ---
 

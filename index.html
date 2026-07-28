@@ -32,6 +32,11 @@
                 <div class="stat-value pending" id="stat-collapse-gain">0</div>
                 <div class="stat-sub" id="stat-collapse-req">benötigt: 1e6 Masse</div>
             </div>
+            <div class="stat-block horizon-block" id="horizon-block">
+                <div class="stat-label">Horizont</div>
+                <div class="stat-value" id="stat-horizon">34px</div>
+                <div class="horizon-bar"><div class="horizon-fill" id="horizon-fill"></div></div>
+            </div>
             <div class="stat-block toolbar">
                 <button id="btn-info" title="Über / Support">ⓘ</button>
                 <button id="btn-save" title="Speichern">💾</button>
@@ -74,7 +79,17 @@
                 <button class="tab hidden" id="tab-multiverse" data-tab="multiverse">MV</button>
                 <button class="tab" data-tab="stats">Stats</button>
             </div>
-            <div class="tab-panel active" id="panel-upgrades"></div>
+            <div class="tab-panel active" id="panel-upgrades">
+                <div id="reserve-block" class="reserve-block hidden">
+                    <div class="reserve-label">
+                        <span>Massen-Reserve</span>
+                        <span id="reserve-val">0%</span>
+                    </div>
+                    <input type="range" min="0" max="90" step="5" value="0" id="reserve-input">
+                    <div class="reserve-hint">Auto-Buy kauft nur wenn die Kosten unter diesem Anteil deiner aktuellen Masse bleiben.</div>
+                </div>
+                <div id="upgrades-list"></div>
+            </div>
             <div class="tab-panel" id="panel-particles"></div>
             <div class="tab-panel" id="panel-dark"></div>
             <div class="tab-panel" id="panel-multiverse"></div>

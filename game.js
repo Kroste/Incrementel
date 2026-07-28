@@ -46,14 +46,21 @@ function fmtTime(ms) {
 // ---------------------------------------------------------------------------
 
 const PARTICLE_TYPES = [
-    { id: 'basic',    name: 'Wasserstoff',   color: '#e6e9f5', glow: '#cfd6ff', value: 1,       weight: 100, radius: 3.0, unlock: 0,       unlockCost: 0     },
-    { id: 'ion',      name: 'Ion',           color: '#6ee7ff', glow: '#38bdf8', value: 8,       weight: 50,  radius: 3.6, unlock: 25,      unlockCost: 50    },
-    { id: 'photon',   name: 'Photon',        color: '#facc15', glow: '#eab308', value: 55,      weight: 22,  radius: 3.2, unlock: 500,     unlockCost: 1000  },
-    { id: 'neutron',  name: 'Neutron',       color: '#a78bfa', glow: '#8b5cf6', value: 380,     weight: 10,  radius: 4.2, unlock: 5000,    unlockCost: 12000 },
-    { id: 'quark',    name: 'Quark',         color: '#34d399', glow: '#10b981', value: 2800,    weight: 5,   radius: 4.8, unlock: 5e4,     unlockCost: 1.5e5 },
-    { id: 'antimatt', name: 'Antimaterie',   color: '#f472b6', glow: '#ec4899', value: 22000,   weight: 2,   radius: 5.4, unlock: 6e5,     unlockCost: 2e6   },
-    { id: 'exotic',   name: 'Exot. Materie', color: '#f87171', glow: '#ef4444', value: 180000,  weight: 0.8, radius: 6.0, unlock: 8e6,     unlockCost: 3e7   },
-    { id: 'cosmic',   name: 'Kosmische E.',  color: '#ffffff', glow: '#a78bfa', value: 1.6e6,   weight: 0.3, radius: 6.8, unlock: 1.2e8,   unlockCost: 5e8   },
+    { id: 'basic',    name: 'Wasserstoff',   color: '#e6e9f5', glow: '#cfd6ff', value: 1,       weight: 100, radius: 3.0, unlock: 0,       unlockCost: 0,     reqMV: 0 },
+    { id: 'ion',      name: 'Ion',           color: '#6ee7ff', glow: '#38bdf8', value: 8,       weight: 50,  radius: 3.6, unlock: 25,      unlockCost: 50,    reqMV: 0 },
+    { id: 'photon',   name: 'Photon',        color: '#facc15', glow: '#eab308', value: 55,      weight: 22,  radius: 3.2, unlock: 500,     unlockCost: 1000,  reqMV: 0 },
+    { id: 'neutron',  name: 'Neutron',       color: '#a78bfa', glow: '#8b5cf6', value: 380,     weight: 10,  radius: 4.2, unlock: 5000,    unlockCost: 12000, reqMV: 0 },
+    { id: 'quark',    name: 'Quark',         color: '#34d399', glow: '#10b981', value: 2800,    weight: 5,   radius: 4.8, unlock: 5e4,     unlockCost: 1.5e5, reqMV: 0 },
+    { id: 'antimatt', name: 'Antimaterie',   color: '#f472b6', glow: '#ec4899', value: 22000,   weight: 2,   radius: 5.4, unlock: 6e5,     unlockCost: 2e6,   reqMV: 0 },
+    { id: 'exotic',   name: 'Exot. Materie', color: '#f87171', glow: '#ef4444', value: 180000,  weight: 0.8, radius: 6.0, unlock: 8e6,     unlockCost: 3e7,   reqMV: 0 },
+    { id: 'cosmic',   name: 'Kosmische E.',  color: '#ffffff', glow: '#a78bfa', value: 1.6e6,   weight: 0.3, radius: 6.8, unlock: 1.2e8,   unlockCost: 5e8,   reqMV: 0 },
+    // Post-Kosmos-Tiers — jeder unlockt nach dem N-ten Big Bang
+    { id: 'dark',     name: 'Dunkelmaterie', color: '#312e81', glow: '#818cf8', value: 12e6,    weight: 0.15,radius: 7.0, unlock: 1e9,     unlockCost: 3e9,   reqMV: 1 },
+    { id: 'void',     name: 'Void-Kristall', color: '#0f0f1f', glow: '#c4b5fd', value: 90e6,    weight: 0.08,radius: 7.4, unlock: 8e9,     unlockCost: 2e10,  reqMV: 2 },
+    { id: 'chronon',  name: 'Chronon',       color: '#22d3ee', glow: '#67e8f9', value: 700e6,   weight: 0.04,radius: 7.8, unlock: 6e10,    unlockCost: 1.5e11,reqMV: 3 },
+    { id: 'singulon', name: 'Singulon',      color: '#e879f9', glow: '#f0abfc', value: 5.4e9,   weight: 0.02,radius: 8.2, unlock: 4e11,    unlockCost: 1e12,  reqMV: 4 },
+    { id: 'urphoton', name: 'Ur-Photon',     color: '#fef08a', glow: '#fef9c3', value: 42e9,    weight: 0.01,radius: 8.6, unlock: 3e12,    unlockCost: 8e12,  reqMV: 5 },
+    { id: 'metabos',  name: 'Meta-Boson',    color: '#fecaca', glow: '#fca5a5', value: 340e9,   weight: 0.005,radius:9.2, unlock: 2e13,    unlockCost: 6e13,  reqMV: 6 },
 ];
 
 const typeById = Object.fromEntries(PARTICLE_TYPES.map(t => [t.id, t]));
@@ -63,18 +70,6 @@ const typeById = Object.fromEntries(PARTICLE_TYPES.map(t => [t.id, t]));
 // ---------------------------------------------------------------------------
 
 const UPGRADES = [
-    {
-        id: 'gravity', name: 'Gravitations-Feld', icon: 'G',
-        desc: 'Reichweite und Stärke der Anziehung. Partikel driften schneller ins Zentrum.',
-        baseCost: 15, growth: 1.18, maxLevel: 200,
-        effect: lvl => ({ label: `+${(lvl * 12)}% Reichweite / +${(lvl * 8)}% Kraft` }),
-    },
-    {
-        id: 'absorb', name: 'Ereignis-Horizont', icon: 'H',
-        desc: 'Absorptions-Radius der Singularität. Größerer Horizont schluckt Partikel früher.',
-        baseCost: 40, growth: 1.22, maxLevel: 100,
-        effect: lvl => ({ label: `+${(lvl * 2).toFixed(0)} px Radius` }),
-    },
     {
         id: 'yield', name: 'Massen-Kondensator', icon: 'M',
         desc: 'Jedes absorbierte Partikel liefert mehr Masse.',
@@ -121,6 +116,7 @@ const DM_UPGRADES = [
     { id: 'dmGain',     name: 'Kollaps-Effizienz', desc: 'Erhalte mehr Dark Matter pro Kollaps.',                          baseCost: 5, growth: 4.0, maxLevel: 15, effect: lvl => ({ label: `DM-Gewinn ×${(1 + lvl * 0.35).toFixed(2)}` }) },
     { id: 'rareBoost',  name: 'Seltenheits-Sog',  desc: 'Seltene Partikel erscheinen häufiger.',                           baseCost: 8, growth: 4.0, maxLevel: 10, effect: lvl => ({ label: `Seltenheit ×${(1 + lvl * 0.5).toFixed(2)}` }) },
     { id: 'offline',    name: 'Zeit-Anker',       desc: 'Effizienz der Offline-Progression.',                              baseCost: 10, growth: 3.5, maxLevel: 10, effect: lvl => ({ label: `Offline ${(50 + lvl * 5)}%` }) },
+    { id: 'automat',    name: 'Automat',          desc: 'Auto-Buy für Upgrades und (ab Lv 2) Partikel-Wiederentdeckung. Lv 3 fügt einen Reserve-Slider hinzu.', baseCost: 12, growth: 5.0, maxLevel: 3, effect: lvl => ({ label: lvl === 0 ? 'gesperrt' : lvl === 1 ? 'Upgrade-Auto (500ms)' : lvl === 2 ? '+ Partikel-Auto' : '+ 100ms + Reserve-Slider' }) },
 ];
 
 const dmUpgradeById = Object.fromEntries(DM_UPGRADES.map(u => [u.id, u]));
@@ -198,9 +194,11 @@ const ACHIEVEMENTS = [
     { id: 'firstColl',  title: 'Erster Kollaps',        desc: 'Führe deinen ersten Kollaps durch.',                    check: s => s.stats.collapses >= 1 },
     { id: 'coll10',     title: 'Zyklen-Meister',        desc: 'Führe 10 Kollapse durch.',                              check: s => s.stats.collapses >= 10 },
     { id: 'unlockAll',  title: 'Materie-Bibliothek',    desc: 'Schalte alle Partikel-Typen frei.',                     check: s => PARTICLE_TYPES.every(t => s.unlockedTypes[t.id]) },
+    { id: 'discAll',    title: 'Sammler',               desc: 'Entdecke jeden verfügbaren Partikel-Typ mindestens einmal.', check: s => PARTICLE_TYPES.filter(t => (s.stats.multiverses || 0) >= (t.reqMV || 0)).every(t => s.discoveredTypes[t.id]) },
+    { id: 'postCosmic', title: 'Jenseits des Kosmos',   desc: 'Entdecke deinen ersten Post-Kosmos-Partikel.',          check: s => PARTICLE_TYPES.some(t => (t.reqMV || 0) > 0 && s.discoveredTypes[t.id]) },
     { id: 'click100',   title: 'Fleißiger Finger',      desc: 'Löse 100 Klick-Impulse aus.',                           check: s => s.stats.clicks >= 100 },
     { id: 'auto10',     title: 'Automatisiert',         desc: 'Baue 10 Auto-Kollektoren.',                             check: s => (s.upgrades.auto || 0) >= 10 },
-    { id: 'gravity50',  title: 'Schwerkraft-Fanatiker', desc: 'Bringe das Gravitations-Feld auf Level 50.',            check: s => (s.upgrades.gravity || 0) >= 50 },
+    { id: 'horizonBig', title: 'Alles verschluckend',   desc: 'Fülle mit dem Ereignis-Horizont den Bildschirm (Auto-Trigger).', check: s => s.stats.autoTriggered >= 1 },
     { id: 'dm10',       title: 'Dunkelheit',            desc: 'Sammle 10 Dark Matter.',                                check: s => s.darkMatter >= 10 },
     { id: 'dm100',      title: 'Kosmische Präsenz',     desc: 'Sammle 100 Dark Matter.',                               check: s => s.darkMatter >= 100 },
     { id: 'firstEvent', title: 'Anomalie',              desc: 'Erlebe dein erstes Chaos-Event.',                       check: s => s.stats.eventsTriggered >= 1 },
@@ -214,7 +212,8 @@ const ACHIEVEMENTS = [
 // ---------------------------------------------------------------------------
 
 const SAVE_KEY = 'singularitaet_save_v1';
-const SAVE_VERSION = 2;
+const SAVE_VERSION = 4;
+const REDISCOVER_FACTOR = 0.30;   // Re-Unlock kostet 30% des Original-Preises
 
 function makeInitialState() {
     return {
@@ -226,6 +225,7 @@ function makeInitialState() {
         dmUpgrades: {},                // id -> level
         multUpgrades: {},              // id -> level
         unlockedTypes: { basic: true },
+        discoveredTypes: { basic: true },   // je entdeckt (persistent über Kollapse)
         achievements: {},              // id -> unlockedAt
         stats: {
             totalMass: 0,
@@ -237,11 +237,15 @@ function makeInitialState() {
             absorbedCount: 0,
             eventsTriggered: 0,
             goldenClicked: 0,
+            discoveries: 0,
+            autoTriggered: 0,
             startTime: Date.now(),
             playtime: 0,
         },
         lastSave: Date.now(),
         muted: false,
+        autoBuy: { upgrades: {}, particles: {} },
+        autoReserve: 0,   // Prozent 0..90
     };
 }
 
@@ -259,6 +263,7 @@ const runtime = {
     lastFrame: now(),
     spawnAccum: 0,
     autoAccum: 0,
+    autoBuyAccum: 0,
     saveAccum: 0,
     achAccum: 0,
     hueShift: 0,
@@ -266,7 +271,17 @@ const runtime = {
     event: null,          // {def, endsAt, startedAt}
     nextEventAt: now() + 45_000,   // erstes Event nach ~45s
     goldenParticle: null, // spezielles Golden-Partikel wenn 'golden'-Event aktiv
+    // Auto-Big-Bang bei ausgefülltem Bildschirm
+    criticalSince: null,  // Timestamp seit wann der Horizont über der Trigger-Schwelle liegt
+    autoTriggerDelay: 2000,
 };
+
+const AUTO_TRIGGER_FRACTION = 0.45;   // Radius >= 45% der kürzeren Bildschirmseite → Trigger
+
+function autoTriggerRadius() {
+    const c = els.canvas;
+    return Math.min(c.clientWidth, c.clientHeight) * AUTO_TRIGGER_FRACTION;
+}
 
 // ---------------------------------------------------------------------------
 // DERIVED / EFFECTIVE STATS  (computed each frame from upgrade levels)
@@ -292,18 +307,29 @@ function eff() {
         Object.assign(evMod, runtime.event.def.modifiers);
     }
 
-    const gravLvl   = u.gravity   || 0;
-    const absLvl    = u.absorb    || 0;
     const yldLvl    = u.yield     || 0;
     const spawnLvl  = u.spawn     || 0;
     const clickLvl  = u.click     || 0;
     const autoLvl   = u.auto      || 0;
     const apLvl     = u.autoPower || 0;
 
+    // Auto-Growth: absorb/gravity skalieren mit der aktuell gesammelten Masse.
+    // absorb: quadratische Rampe über log(mass), erreicht die Trigger-Schwelle bei ~1e12.
+    // gravity: log-Skala, immer noch stark aber deutlich milder als das alte Level-Upgrade.
+    const canvas = els.canvas;
+    const trigger = canvas ? Math.min(canvas.clientWidth, canvas.clientHeight) * AUTO_TRIGGER_FRACTION : 400;
+    const massScale = Math.log10(Math.max(1, state.mass) + 10);   // 1..20+
+    const t = Math.pow(massScale / 20, 3);                          // 1.0 bei mass=1e20 (Sextillion)
+    const rawAbsorb = 34 + t * (trigger - 34);                      // kann trigger übersteigen
+    const capped    = Math.min(rawAbsorb, trigger);
+    const rawReach  = 220 + massScale * 140;                        // bei 1e20: ~3020 px
+    const rawForce  = 34 + massScale * 22;                          // bei 1e20: ~474
+
     return {
-        gravReach : (220 + gravLvl * 26) * evMod.gravMult,
-        gravForce : (34  + gravLvl * 6)  * evMod.gravMult,
-        absorbRadius: (34 + absLvl * 2) * evMod.absorbMult,
+        gravReach : rawReach * evMod.gravMult,
+        gravForce : rawForce * evMod.gravMult,
+        absorbRadius: capped * evMod.absorbMult,
+        absorbRawUncapped: rawAbsorb,   // für Trigger-Check
         yieldMult: (1 + yldLvl * 0.35) * dmMult * mvConstant * evMod.yieldMult,
         spawnPerSec: (2 + spawnLvl * 1.5) * dmSpawn * evMod.spawnMult,
         clickRadius: 60 + clickLvl * 12,
@@ -346,6 +372,23 @@ function upgradeCost(u, level) {
     return u.baseCost * Math.pow(u.growth, level);
 }
 
+/** Ist dieser Partikel-Typ nach aktuellem Prestige-Stand grundsätzlich verfügbar? */
+function typeAvailable(t) {
+    return state.stats.multiverses >= (t.reqMV || 0);
+}
+
+/** Effektive Unlock-Kosten – Re-Unlock nach Discovery ist rabattiert. */
+function typeUnlockCost(t) {
+    if (state.discoveredTypes[t.id]) return t.unlockCost * REDISCOVER_FACTOR;
+    return t.unlockCost;
+}
+
+/** Massen-Gate greift nur beim allerersten Discovery, nicht beim Re-Unlock. */
+function typeGateReached(t) {
+    if (state.discoveredTypes[t.id]) return true;
+    return state.stats.totalMass >= t.unlock;
+}
+
 // ---------------------------------------------------------------------------
 // PARTICLE SIMULATION
 // ---------------------------------------------------------------------------
@@ -379,27 +422,53 @@ function spawnParticle(typeOverride) {
         if (!type) type = PARTICLE_TYPES[0];
     }
 
-    // Zufällige Ausgangs-Geschwindigkeit (leicht in Richtung Zentrum)
+    // Zufällige Ausgangs-Geschwindigkeit (in Richtung Zentrum, minimal tangentiale
+    // Perturbation — zu viel würde Orbits erzeugen aus denen der Partikel nie
+    // wieder heraus findet).
     const dx = runtime.center.x - x;
     const dy = runtime.center.y - y;
     const d = Math.hypot(dx, dy) || 1;
-    const speed = rand(20, 55);
+    const nx = dx / d, ny = dy / d;
+    // Tangential-Vektor (senkrecht zum Radial)
+    const tx = -ny, ty = nx;
+    const speed = rand(30, 65);
+    const tangential = rand(-12, 12);
 
     runtime.particles.push({
         type,
         x, y,
-        vx: (dx / d) * speed + rand(-30, 30),
-        vy: (dy / d) * speed + rand(-30, 30),
+        vx: nx * speed + tx * tangential,
+        vy: ny * speed + ty * tangential,
         r: type.radius,
         life: 0,
     });
+}
+
+/** True wenn die Strecke (ax,ay)→(bx,by) den Kreis (cx,cy,r) berührt/schneidet. */
+function segmentHitsCircle(ax, ay, bx, by, cx, cy, r) {
+    const vx = bx - ax, vy = by - ay;
+    const wx = cx - ax, wy = cy - ay;
+    const vv = vx * vx + vy * vy;
+    if (vv < 1e-6) return (wx * wx + wy * wy) < r * r;
+    let t = (wx * vx + wy * vy) / vv;
+    if (t < 0) t = 0; else if (t > 1) t = 1;
+    const dx = ax + t * vx - cx;
+    const dy = ay + t * vy - cy;
+    return (dx * dx + dy * dy) < r * r;
 }
 
 function simulateParticles(dt) {
     const e = eff();
     const cx = runtime.center.x, cy = runtime.center.y;
     const reach2 = e.gravReach * e.gravReach;
-    const absR2  = e.absorbRadius * e.absorbRadius;
+    const absR   = e.absorbRadius;
+    const absR2  = absR * absR;
+    // Velocity Cap: 1× Bildschirm-Diagonale/Sekunde. Verhindert Tunneling und hält
+    // die Partikel-Bewegung visuell sichtbar (statt Blitz-Instant-Absorption bei
+    // extremer Gravity).
+    const canvas = els.canvas;
+    const maxV   = Math.hypot(canvas.clientWidth, canvas.clientHeight);
+    const maxV2  = maxV * maxV;
 
     const ps = runtime.particles;
     for (let i = ps.length - 1; i >= 0; i--) {
@@ -407,32 +476,62 @@ function simulateParticles(dt) {
         p.life += dt;
         const dx = cx - p.x, dy = cy - p.y;
         const d2 = dx * dx + dy * dy;
+        const d  = Math.sqrt(d2) || 1;
 
-        // absorb?
+        // Sofort-Absorb wenn schon drin
         if (d2 < absR2) {
             absorbParticle(p);
             ps.splice(i, 1);
             continue;
         }
 
-        // gravity attraction (skaliert mit Nähe innerhalb reach)
+        // Gravity — innerhalb reach voll, außerhalb schwach aber immer aktiv.
         if (d2 < reach2) {
-            const d = Math.sqrt(d2) || 1;
-            const near = 1 - (d / e.gravReach);  // 0..1 (nah = 1)
-            const a = e.gravForce * (0.4 + near * 1.6);  // stärker je näher
+            const near = 1 - (d / e.gravReach);
+            const a = e.gravForce * (0.4 + near * 1.6);
+            p.vx += (dx / d) * a * dt;
+            p.vy += (dy / d) * a * dt;
+        } else {
+            const a = e.gravForce * 0.25;
             p.vx += (dx / d) * a * dt;
             p.vy += (dy / d) * a * dt;
         }
 
-        // leichte Reibung (verhindert Über-Beschleunigung am Zentrum)
-        p.vx *= 0.995;
-        p.vy *= 0.995;
+        // Velocity Cap
+        const v2 = p.vx * p.vx + p.vy * p.vy;
+        if (v2 > maxV2) {
+            const s = maxV / Math.sqrt(v2);
+            p.vx *= s; p.vy *= s;
+        }
 
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
+        // Asymmetrische Dämpfung:
+        //   - inbound (Bewegung zum Zentrum): kaum dämpfen  → schneller Fall ins Loch
+        //   - outbound (Bewegung weg vom Zentrum): stark dämpfen → kein Vorbeischießen/Oszillieren
+        //   - tangential: sehr stark dämpfen → killt Orbits
+        const rhx = dx / d, rhy = dy / d;                 // Einheits-Radial (Partikel → Zentrum)
+        const vrScalar = p.vx * rhx + p.vy * rhy;         // >0 = zum Zentrum, <0 = weg
+        const vrx = rhx * vrScalar, vry = rhy * vrScalar;
+        const vtx = p.vx - vrx,     vty = p.vy - vry;
+        const radMult = vrScalar > 0 ? 0.999 : 0.88;      // asymmetrisch
+        const tangMult = 0.85;
+        p.vx = vrx * radMult + vtx * tangMult;
+        p.vy = vry * radMult + vty * tangMult;
 
-        // Cleanup: Partikel die zu lange leben und weit weg sind
-        if (p.life > 60 && d2 > reach2 * 4) ps.splice(i, 1);
+        // Trail-Historie für sichtbare Bewegung
+        p.prevX = p.x; p.prevY = p.y;
+
+        // Bewegung + Swept-Absorb: prüfen ob der Pfad {alt→neu} den Absorb-Kreis kreuzt.
+        const nx = p.x + p.vx * dt;
+        const ny = p.y + p.vy * dt;
+        if (segmentHitsCircle(p.x, p.y, nx, ny, cx, cy, absR)) {
+            absorbParticle(p);
+            ps.splice(i, 1);
+            continue;
+        }
+        p.x = nx; p.y = ny;
+
+        // Cleanup
+        if (p.life > 90) ps.splice(i, 1);
     }
 
     // Auto-Kollektoren rotieren um Zentrum und "schießen" ab und zu Massen-Impulse ab
@@ -567,13 +666,88 @@ function buyUpgrade(id) {
 function unlockParticle(id) {
     const t = typeById[id];
     if (!t || state.unlockedTypes[id]) return;
-    if (state.stats.totalMass < t.unlock) return;
-    if (state.mass < t.unlockCost) return;
-    state.mass -= t.unlockCost;
+    if (!typeAvailable(t)) return;
+    if (!typeGateReached(t)) return;
+    const cost = typeUnlockCost(t);
+    if (state.mass < cost) return;
+    state.mass -= cost;
     state.unlockedTypes[id] = true;
-    toast('Partikel entdeckt', t.name, `Wert ${fmt(t.value)} pro Absorb`);
+    const firstTime = !state.discoveredTypes[id];
+    if (firstTime) {
+        state.discoveredTypes[id] = true;
+        state.stats.discoveries++;
+        toast('Partikel entdeckt', t.name, `Wert ${fmt(t.value)} · zukünftig zu ${Math.round(REDISCOVER_FACTOR * 100)}% wieder-erwerbbar`);
+    } else {
+        toast('Wiederentdeckt', t.name, `Wert ${fmt(t.value)} pro Absorb`);
+    }
     renderShop();
     playBuy();
+}
+
+/** Prüft ob der Ereignis-Horizont die Trigger-Schwelle erreicht hat und löst nach
+ *  einer Debouncing-Delay den bestmöglichen Prestige aus (Big Bang > Kollaps). */
+function checkAutoPrestige() {
+    const trigger = autoTriggerRadius();
+    const raw = eff().absorbRawUncapped;
+    if (raw >= trigger) {
+        if (runtime.criticalSince === null) runtime.criticalSince = now();
+        const held = now() - runtime.criticalSince;
+        if (held >= runtime.autoTriggerDelay) {
+            let triggered = false;
+            if (multiverseUnlocked() && canMultiverse()) {
+                performMultiverse();
+                triggered = true;
+            } else if (canCollapse()) {
+                performCollapse();
+                triggered = true;
+            }
+            if (triggered) state.stats.autoTriggered = (state.stats.autoTriggered || 0) + 1;
+            // Falls keins möglich: criticalSince bleibt, aber Radius ist visuell gecappt.
+            runtime.criticalSince = null;
+        }
+    } else {
+        runtime.criticalSince = null;
+    }
+}
+
+/** Auto-buy pass. Kauft Upgrades und (Lv2+) Partikel-Rediscovers.
+ *  Respektiert Reserve-Slider bei Lv3. Gibt true zurück wenn etwas gekauft wurde. */
+function tickAutoBuy() {
+    const lvl = state.dmUpgrades.automat || 0;
+    if (lvl === 0) return false;
+
+    const reservePct = lvl >= 3 ? (state.autoReserve || 0) / 100 : 0;
+    // "kauf nur wenn Kosten <= (1 - Reserve) * aktuelle Masse"
+    const budgetCap = () => state.mass * (1 - reservePct);
+    let bought = false;
+
+    // Upgrades
+    for (const u of UPGRADES) {
+        if (!state.autoBuy.upgrades[u.id]) continue;
+        const cur = state.upgrades[u.id] || 0;
+        if (cur >= u.maxLevel) continue;
+        const cost = upgradeCost(u, cur);
+        if (cost > state.mass || cost > budgetCap()) continue;
+        state.mass -= cost;
+        state.upgrades[u.id] = cur + 1;
+        bought = true;
+    }
+
+    // Partikel-Wiederentdeckung (nur ab Lv 2, nur discovered types)
+    if (lvl >= 2) {
+        for (const t of PARTICLE_TYPES) {
+            if (!state.autoBuy.particles[t.id]) continue;
+            if (state.unlockedTypes[t.id]) continue;
+            if (!state.discoveredTypes[t.id]) continue;
+            if (!typeAvailable(t)) continue;
+            const cost = typeUnlockCost(t);
+            if (cost > state.mass || cost > budgetCap()) continue;
+            state.mass -= cost;
+            state.unlockedTypes[t.id] = true;
+            bought = true;
+        }
+    }
+    return bought;
 }
 
 function buyDMUpgrade(id) {
@@ -618,7 +792,8 @@ function performMultiverse() {
     state.darkMatter = keptDM;
     state.upgrades = {};
     state.dmUpgrades = {};
-    // unlockedTypes und achievements bleiben — Erinnerung des Multiversums.
+    state.unlockedTypes = { basic: true };   // Re-Unlock erforderlich
+    // discoveredTypes und achievements bleiben — Erinnerung des Multiversums.
 
     shake(60, 1500);
     for (let ring = 0; ring < 3; ring++) {
@@ -735,9 +910,10 @@ function performCollapse() {
     state.stats.totalDM += gain;
     state.stats.collapses++;
 
-    // Reset run state — aber Dark Matter, DM-Upgrades, unlockedTypes, achievements, stats bleiben
+    // Reset run state — Dark Matter, DM-Upgrades, discoveredTypes, achievements, stats bleiben
     state.mass = 100 * Math.pow(10, state.dmUpgrades.startMass || 0);
     state.upgrades = {};
+    state.unlockedTypes = { basic: true };   // Re-Unlock erforderlich (rabattiert dank Discovery)
 
     // Effekte
     shake(30, 900);
@@ -874,6 +1050,24 @@ function render() {
     ctx.globalAlpha = 1;
 
     // particles
+    // Trails zuerst (unter den Cores) — nur bei nennenswerter Bewegung
+    ctx.globalCompositeOperation = 'lighter';
+    for (const p of runtime.particles) {
+        if (p.prevX === undefined) continue;
+        const ddx = p.x - p.prevX, ddy = p.y - p.prevY;
+        const len2 = ddx * ddx + ddy * ddy;
+        if (len2 < 4) continue;   // <2px Bewegung: kein Trail
+        ctx.strokeStyle = p.type.glow;
+        ctx.globalAlpha = 0.55;
+        ctx.lineWidth = Math.max(1, p.type.radius * 0.6);
+        ctx.beginPath();
+        ctx.moveTo(p.prevX, p.prevY);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+
     for (const p of runtime.particles) {
         const t = p.type;
         // Glow
@@ -1017,6 +1211,22 @@ function drawSingularity(ctx) {
     ctx.strokeStyle = `hsla(${runtime.hueShift + 200}, 100%, 75%, 0.5)`;
     ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(cx, cy, e.absorbRadius + 1, 0, Math.PI * 2); ctx.stroke();
+
+    // Critical-State: pulsierender roter Warn-Rim während 2s-Delay bis Auto-Trigger
+    if (runtime.criticalSince !== null) {
+        const held = now() - runtime.criticalSince;
+        const prog = Math.min(1, held / runtime.autoTriggerDelay);
+        const pulse = 0.5 + 0.5 * Math.sin(now() / 60);
+        ctx.strokeStyle = `rgba(239, 68, 68, ${0.35 + pulse * 0.5})`;
+        ctx.lineWidth = 3 + pulse * 5;
+        ctx.beginPath(); ctx.arc(cx, cy, e.absorbRadius + 8, 0, Math.PI * 2); ctx.stroke();
+        // Progress-Arc über dem Horizont
+        ctx.strokeStyle = `rgba(239, 68, 68, 0.9)`;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(cx, cy, e.absorbRadius + 16, -Math.PI / 2, -Math.PI / 2 + prog * Math.PI * 2);
+        ctx.stroke();
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1035,6 +1245,9 @@ function grabElements() {
     els.statCollapseReq  = document.getElementById('stat-collapse-req');
     els.btnCollapse = document.getElementById('btn-collapse');
     els.collapseBtnGain = document.getElementById('collapse-btn-gain');
+    els.horizonBlock = document.getElementById('horizon-block');
+    els.statHorizon = document.getElementById('stat-horizon');
+    els.horizonFill = document.getElementById('horizon-fill');
     els.btnMultiverse = document.getElementById('btn-multiverse');
     els.multBtnGain = document.getElementById('mult-btn-gain');
     els.statKosmosBlock = document.getElementById('stat-kosmos-block');
@@ -1065,6 +1278,10 @@ function grabElements() {
         multiverse: document.getElementById('panel-multiverse'),
         stats: document.getElementById('panel-stats'),
     };
+    els.upgradesList = document.getElementById('upgrades-list');
+    els.reserveBlock = document.getElementById('reserve-block');
+    els.reserveInput = document.getElementById('reserve-input');
+    els.reserveVal = document.getElementById('reserve-val');
 }
 
 function fitCanvas() {
@@ -1123,6 +1340,15 @@ function updateHUD(dt) {
         els.btnMultiverse.disabled = !canMultiverse();
     }
 
+    // Horizont-Block
+    const eNow = eff();
+    const trigger = autoTriggerRadius();
+    const raw = eNow.absorbRawUncapped;
+    const pct = Math.min(1, raw / trigger);
+    els.statHorizon.textContent = raw.toFixed(0) + 'px';
+    els.horizonFill.style.width = (pct * 100).toFixed(1) + '%';
+    els.horizonBlock.classList.toggle('critical', runtime.criticalSince !== null);
+
     // Event-Banner
     if (runtime.event && runtime.event.endsAt > now()) {
         const ev = runtime.event;
@@ -1146,6 +1372,11 @@ function updateHUD(dt) {
 }
 
 function renderShop() {
+    const automatLvl = state.dmUpgrades.automat || 0;
+
+    // Reserve-Slider Sichtbarkeit
+    els.reserveBlock.classList.toggle('hidden', automatLvl < 3);
+
     // Upgrades
     let html = '';
     for (const u of UPGRADES) {
@@ -1155,11 +1386,16 @@ function renderShop() {
         const affordable = state.mass >= cost && !maxed;
         const eff = u.effect(lvl);
         const nextEff = u.effect(lvl + 1);
+        const autoOn = !!state.autoBuy.upgrades[u.id];
+        const autoBtn = automatLvl >= 1
+            ? `<button class="auto-toggle ${autoOn ? 'on' : ''}" data-auto-up="${u.id}" title="Auto-Buy ${autoOn ? 'AN' : 'AUS'}">⚡</button>`
+            : '';
         html += `
             <div class="upgrade ${!affordable && !maxed ? 'disabled' : ''} ${affordable ? 'affordable' : ''}"
                  data-buy="${u.id}">
                 <div class="upgrade-header">
                     <span class="upgrade-name">${u.name}</span>
+                    ${autoBtn}
                     <span class="upgrade-level">Lv ${lvl}${maxed ? ' (MAX)' : ` / ${u.maxLevel}`}</span>
                 </div>
                 <div class="upgrade-desc">${u.desc}</div>
@@ -1167,31 +1403,67 @@ function renderShop() {
                 ${!maxed ? `<div class="upgrade-cost ${affordable ? '' : 'unaffordable'}">${fmt(cost)} Masse</div>` : ''}
             </div>`;
     }
-    els.panels.upgrades.innerHTML = html;
+    els.upgradesList.innerHTML = html;
 
-    // Partikel
-    html = '<div class="section-heading">Entdeckte & entdeckbare Partikel</div>';
+    // Partikel — Re-Unlock pro Kollaps mit Discovery-Rabatt; Post-Kosmos-Tiers via Big Bang
+    const discoveryCount = Object.keys(state.discoveredTypes).length;
+    const totalCount = PARTICLE_TYPES.length;
+    html = `<div class="section-heading">Partikel — ${discoveryCount}/${totalCount} entdeckt · ${Math.round(REDISCOVER_FACTOR * 100)}% Re-Discover-Preis</div>`;
+
+    // Sichtbar: alle verfügbaren + max. 2 gesperrte "Teaser"
+    const visible = [];
+    let teasers = 0;
     for (const t of PARTICLE_TYPES) {
+        if (typeAvailable(t)) visible.push({ t, mvLocked: false });
+        else if (teasers < 2) { visible.push({ t, mvLocked: true }); teasers++; }
+    }
+
+    for (const { t, mvLocked } of visible) {
         const owned = !!state.unlockedTypes[t.id];
-        const reached = state.stats.totalMass >= t.unlock;
-        const affordable = state.mass >= t.unlockCost;
-        const buyable = reached && affordable && !owned;
+        const discovered = !!state.discoveredTypes[t.id];
+        const cost = typeUnlockCost(t);
+        const affordable = state.mass >= cost;
+        const gateReached = typeGateReached(t);
+        const buyable = !owned && !mvLocked && gateReached && affordable;
+
+        let body = '';
+        let extraClass = '';
+        if (mvLocked) {
+            extraClass = 'disabled locked-mv';
+            body = `<div class="upgrade-desc">Big Bang #${t.reqMV} benötigt</div>`;
+        } else if (owned) {
+            extraClass = 'owned';
+            body = `<div class="upgrade-effect">Freigeschaltet</div>`;
+        } else if (!gateReached) {
+            extraClass = 'disabled';
+            body = `<div class="upgrade-desc">Erreiche ${fmt(t.unlock)} Gesamt-Masse zum Entdecken.</div>`;
+        } else if (discovered) {
+            // Re-Unlock
+            extraClass = affordable ? 'rediscover' : 'disabled';
+            body = `<div class="upgrade-desc">Wiederentdecken (rabattiert – schon einmal entdeckt).</div>
+                    <div class="upgrade-cost ${affordable ? '' : 'unaffordable'}">${fmt(cost)} Masse</div>`;
+        } else {
+            // First discovery
+            extraClass = affordable ? '' : 'disabled';
+            body = `<div class="upgrade-desc">Erstes Mal entdecken — permanent bekannt danach.</div>
+                    <div class="upgrade-cost ${affordable ? '' : 'unaffordable'}">${fmt(cost)} Masse</div>`;
+        }
+
+        const autoOn = !!state.autoBuy.particles[t.id];
+        const canAuto = automatLvl >= 2 && discovered && !mvLocked && t.id !== 'basic';
+        const autoBtn = canAuto
+            ? `<button class="auto-toggle ${autoOn ? 'on' : ''}" data-auto-part="${t.id}" title="Auto-Rediscover ${autoOn ? 'AN' : 'AUS'}">⚡</button>`
+            : '';
         html += `
-            <div class="particle-card ${owned ? 'owned' : ''} ${!buyable && !owned ? 'disabled' : ''}"
-                 data-particle="${t.id}">
+            <div class="particle-card ${extraClass}" data-particle="${t.id}">
                 <div class="particle-swatch" style="background:${t.color};color:${t.glow}"></div>
                 <div class="particle-info">
                     <div class="upgrade-header">
-                        <span class="upgrade-name">${t.name}</span>
-                        <span class="upgrade-level">Wert ${fmt(t.value)}</span>
+                        <span class="upgrade-name">${discovered || owned ? t.name : (mvLocked ? '???' : t.name)}</span>
+                        ${autoBtn}
+                        <span class="upgrade-level">Wert ${discovered || owned ? fmt(t.value) : '?'}</span>
                     </div>
-                    ${owned
-                        ? `<div class="upgrade-effect">Freigeschaltet</div>`
-                        : reached
-                            ? `<div class="upgrade-desc">Kann kondensiert werden.</div>
-                               <div class="upgrade-cost ${affordable ? '' : 'unaffordable'}">${fmt(t.unlockCost)} Masse</div>`
-                            : `<div class="upgrade-desc">Erreiche ${fmt(t.unlock)} Gesamt-Masse.</div>`
-                    }
+                    ${body}
                 </div>
             </div>`;
     }
@@ -1306,14 +1578,22 @@ function load() {
         const raw = localStorage.getItem(SAVE_KEY);
         if (!raw) return false;
         const parsed = JSON.parse(raw);
-        // v1 -> v2 Migration: alte Saves bekommen die neuen Felder aus dem Initial-State
-        // dazugemischt; Version wird auf aktuell gesetzt.
-        if (parsed.version === 1 || parsed.version === SAVE_VERSION) {
+        // Migration: alte Saves (v1/v2) bekommen fehlende Felder aus dem Initial-State.
+        // v2→v3: discoveredTypes wird aus den bereits unlockedTypes seeded, damit der
+        // Player nicht plötzlich alles verliert. Aktueller Run behält Freischaltungen.
+        if (parsed.version >= 1 && parsed.version <= SAVE_VERSION) {
             const init = makeInitialState();
             state = Object.assign(init, parsed);
             state.stats = Object.assign(init.stats, parsed.stats || {});
             state.multUpgrades = state.multUpgrades || {};
             state.kosmos = state.kosmos || 0;
+            if (!state.discoveredTypes || Object.keys(state.discoveredTypes).length === 0) {
+                state.discoveredTypes = Object.assign({ basic: true }, state.unlockedTypes || {});
+            }
+            state.autoBuy = state.autoBuy || { upgrades: {}, particles: {} };
+            state.autoBuy.upgrades = state.autoBuy.upgrades || {};
+            state.autoBuy.particles = state.autoBuy.particles || {};
+            if (typeof state.autoReserve !== 'number') state.autoReserve = 0;
             state.version = SAVE_VERSION;
             return true;
         }
@@ -1389,6 +1669,23 @@ function bindInput() {
 
     // Shop: delegated buy handlers
     document.getElementById('shop').addEventListener('click', (e) => {
+        // Auto-Toggles zuerst — wenn getroffen, keinen Kauf triggern
+        const au = e.target.closest('[data-auto-up]');
+        if (au) {
+            e.stopPropagation();
+            const id = au.dataset.autoUp;
+            state.autoBuy.upgrades[id] = !state.autoBuy.upgrades[id];
+            renderShop();
+            return;
+        }
+        const ap = e.target.closest('[data-auto-part]');
+        if (ap) {
+            e.stopPropagation();
+            const id = ap.dataset.autoPart;
+            state.autoBuy.particles[id] = !state.autoBuy.particles[id];
+            renderShop();
+            return;
+        }
         const t = e.target.closest('[data-buy]');
         if (t) { buyUpgrade(t.dataset.buy); return; }
         const tp = e.target.closest('[data-particle]');
@@ -1397,6 +1694,13 @@ function bindInput() {
         if (td) { buyDMUpgrade(td.dataset.buyDm); return; }
         const tm = e.target.closest('[data-buy-mv]');
         if (tm) { buyMultUpgrade(tm.dataset.buyMv); return; }
+    });
+
+    // Reserve-Slider (statisches Element, kein re-render nötig)
+    els.reserveInput.addEventListener('input', (e) => {
+        const v = parseInt(e.target.value, 10) || 0;
+        state.autoReserve = v;
+        els.reserveVal.textContent = v + '%';
     });
 
     // Toolbar
@@ -1452,11 +1756,26 @@ function loop() {
         spawnParticle();
         runtime.spawnAccum -= 1;
     }
-    while (runtime.particles.length > 500) runtime.particles.shift();
+    while (runtime.particles.length > 250) runtime.particles.shift();
 
     simulateParticles(dtSim);
     tickAutoCollectors(dtSim);
     updateEffects(dtRaw);
+
+    // Auto-Buy Tick (nur wenn Automat freigeschaltet)
+    const automatLvl = state.dmUpgrades.automat || 0;
+    if (automatLvl > 0) {
+        runtime.autoBuyAccum += dtRaw;
+        const interval = automatLvl >= 3 ? 0.1 : 0.5;
+        if (runtime.autoBuyAccum >= interval) {
+            runtime.autoBuyAccum = 0;
+            if (tickAutoBuy()) renderShop();
+        }
+    }
+
+    // Auto-Big-Bang bei ausgefülltem Bildschirm
+    checkAutoPrestige();
+
     render();
     updateHUD(dtRaw);
 
@@ -1485,6 +1804,8 @@ function boot() {
     bindInput();
     if (loaded) applyOfflineProgress();
     if (state.muted) els.btnMute.textContent = '🔇';
+    els.reserveInput.value = state.autoReserve || 0;
+    els.reserveVal.textContent = (state.autoReserve || 0) + '%';
     renderShop();
     // Startzustand: ein paar Partikel damit direkt was los ist
     for (let i = 0; i < 6; i++) spawnParticle(typeById.basic);
