@@ -77,36 +77,51 @@ jedem Zyklus dank Dark-Matter-Boni schneller wieder hoch.
 
 ## Partikel-Typen
 
-Im Tab **Partikel** siehst du bis zu **14 Materie-Klassen** mit steigendem
-Wert. Die Grund-Klassen sind ab Runde 1 verfügbar, sechs weitere schalten
-sich nach Big Bangs auf. Jede Klasse muss pro Zyklus einmal freigeschaltet
-werden.
+Im Tab **Partikel** siehst du bis zu **28 Materie-Klassen** mit steigendem
+Wert. Die Physik-Klassen sind ab Runde 1 verfügbar, 12 weitere (inklusive
+Sternen, Neutronensternen und einem Mini-Schwarzen-Loch) schalten sich nach
+Big Bangs auf. Jede Klasse muss pro Zyklus einmal freigeschaltet werden.
 
-### Basis-Klassen (Runde 1)
+### Physik-Spektrum (Runde 1)
 
 | Typ              | Wert (Basis) | Freischalt-Schwelle |
 | ---------------- | ------------ | -------------------- |
 | Wasserstoff      | 1            | von Anfang an        |
+| Elektron         | 3            | 8 Masse              |
 | Ion              | 8            | 25 Masse             |
+| Neutrino         | 20           | 120                  |
 | Photon           | 55           | 500                  |
+| Proton           | 150          | 1,5 K                |
 | Neutron          | 380          | 5 K                  |
+| Muon             | 1 K          | 15 K                 |
 | Quark            | 2,8 K        | 50 K                 |
+| Tauon            | 8 K          | 150 K                |
 | Antimaterie      | 22 K         | 600 K                |
+| Higgs-Boson      | 60 K         | 2 M                  |
 | Exotische Mat.   | 180 K        | 8 M                  |
+| Gluon            | 500 K        | 30 M                 |
 | Kosmische Energie| 1,6 M        | 120 M                |
 
-### Post-Kosmos-Klassen (per Big Bang)
+### Post-Kosmos + Stellare Objekte (per Big Bang)
 
-Jeder Big Bang schaltet einen neuen High-Tier frei:
+Neue Klassen schalten sich mit jedem Big Bang auf. Sterne, Pulsare und das
+Mini-Schwarzloch haben eigene Renderer (Strahlen, rotierende Beams,
+Rainbow-Pulse, Event-Horizon):
 
-| Typ              | Wert         | Freischalt-Schwelle | Verfügbar nach |
-| ---------------- | ------------ | -------------------- | -------------- |
-| Dunkelmaterie    | 12 M         | 1 B                  | 1. Big Bang    |
-| Void-Kristall    | 90 M         | 8 B                  | 2. Big Bang    |
-| Chronon          | 700 M        | 60 B                 | 3. Big Bang    |
-| Singulon         | 5,4 B        | 400 B                | 4. Big Bang    |
-| Ur-Photon        | 42 B         | 3 T                  | 5. Big Bang    |
-| Meta-Boson       | 340 B        | 20 T                 | 6. Big Bang    |
+| Typ                | Wert  | Freischalt-Schwelle | Nach BB | Visual        |
+| ------------------ | ----- | ------------------- | ------- | ------------- |
+| Dunkelmaterie      | 12 M  | 1 B                 | 1       | Standard      |
+| ☀ Weißer Zwerg     | 30 M  | 3 B                 | 1       | Stern-Strahlen|
+| Void-Kristall      | 90 M  | 8 B                 | 2       | Standard      |
+| ☀ Roter Riese      | 250 M | 20 B                | 2       | Stern-Strahlen|
+| Chronon            | 700 M | 60 B                | 3       | Standard      |
+| ✦ Neutronenstern   | 2 B   | 200 B               | 3       | Pulsar-Beams  |
+| Singulon           | 5,4 B | 400 B               | 4       | Standard      |
+| ✧ Quark-Stern      | 15 B  | 1 T                 | 4       | Rainbow-Pulse |
+| Ur-Photon          | 42 B  | 3 T                 | 5       | Standard      |
+| ✦ Magnetar         | 120 B | 8 T                 | 5       | Pulsar-Beams  |
+| Meta-Boson         | 340 B | 20 T                | 6       | Standard      |
+| ● Mini-Schwarzloch | 1 T   | 60 T                | 6       | Event-Horizon |
 
 ### Discovery & Re-Unlock
 

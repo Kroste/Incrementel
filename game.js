@@ -46,21 +46,36 @@ function fmtTime(ms) {
 // ---------------------------------------------------------------------------
 
 const PARTICLE_TYPES = [
+    // ---------- Physik-Spektrum (nach Wert aufsteigend) ----------
     { id: 'basic',    name: 'Wasserstoff',   color: '#e6e9f5', glow: '#cfd6ff', value: 1,       weight: 100, radius: 3.0, unlock: 0,       unlockCost: 0,     reqMV: 0 },
+    { id: 'electron', name: 'Elektron',      color: '#93c5fd', glow: '#60a5fa', value: 3,       weight: 75,  radius: 2.4, unlock: 8,       unlockCost: 15,    reqMV: 0 },
     { id: 'ion',      name: 'Ion',           color: '#6ee7ff', glow: '#38bdf8', value: 8,       weight: 50,  radius: 3.6, unlock: 25,      unlockCost: 50,    reqMV: 0 },
+    { id: 'neutrino', name: 'Neutrino',      color: '#ddd6fe', glow: '#a78bfa', value: 20,      weight: 35,  radius: 2.2, unlock: 120,     unlockCost: 300,   reqMV: 0 },
     { id: 'photon',   name: 'Photon',        color: '#facc15', glow: '#eab308', value: 55,      weight: 22,  radius: 3.2, unlock: 500,     unlockCost: 1000,  reqMV: 0 },
+    { id: 'proton',   name: 'Proton',        color: '#fb923c', glow: '#f97316', value: 150,     weight: 15,  radius: 3.8, unlock: 1500,    unlockCost: 4000,  reqMV: 0 },
     { id: 'neutron',  name: 'Neutron',       color: '#a78bfa', glow: '#8b5cf6', value: 380,     weight: 10,  radius: 4.2, unlock: 5000,    unlockCost: 12000, reqMV: 0 },
+    { id: 'muon',     name: 'Muon',          color: '#c084fc', glow: '#a855f7', value: 1000,    weight: 7,   radius: 4.0, unlock: 15000,   unlockCost: 40000, reqMV: 0 },
     { id: 'quark',    name: 'Quark',         color: '#34d399', glow: '#10b981', value: 2800,    weight: 5,   radius: 4.8, unlock: 5e4,     unlockCost: 1.5e5, reqMV: 0 },
+    { id: 'tauon',    name: 'Tauon',         color: '#4ade80', glow: '#22c55e', value: 8000,    weight: 3.5, radius: 4.6, unlock: 1.5e5,   unlockCost: 4e5,   reqMV: 0 },
     { id: 'antimatt', name: 'Antimaterie',   color: '#f472b6', glow: '#ec4899', value: 22000,   weight: 2,   radius: 5.4, unlock: 6e5,     unlockCost: 2e6,   reqMV: 0 },
+    { id: 'higgs',    name: 'Higgs-Boson',   color: '#fb7185', glow: '#f43f5e', value: 60000,   weight: 1.4, radius: 5.6, unlock: 2e6,     unlockCost: 8e6,   reqMV: 0 },
     { id: 'exotic',   name: 'Exot. Materie', color: '#f87171', glow: '#ef4444', value: 180000,  weight: 0.8, radius: 6.0, unlock: 8e6,     unlockCost: 3e7,   reqMV: 0 },
+    { id: 'gluon',    name: 'Gluon',         color: '#fda4af', glow: '#f472b6', value: 500000,  weight: 0.5, radius: 5.8, unlock: 3e7,     unlockCost: 1.2e8, reqMV: 0 },
     { id: 'cosmic',   name: 'Kosmische E.',  color: '#ffffff', glow: '#a78bfa', value: 1.6e6,   weight: 0.3, radius: 6.8, unlock: 1.2e8,   unlockCost: 5e8,   reqMV: 0 },
-    // Post-Kosmos-Tiers — jeder unlockt nach dem N-ten Big Bang
+
+    // ---------- Stellare Objekte + Post-Kosmos (nach Wert / reqMV) ----------
     { id: 'dark',     name: 'Dunkelmaterie', color: '#312e81', glow: '#818cf8', value: 12e6,    weight: 0.15,radius: 7.0, unlock: 1e9,     unlockCost: 3e9,   reqMV: 1 },
+    { id: 'dwarf',    name: 'Weißer Zwerg',  color: '#dbeafe', glow: '#60a5fa', value: 30e6,    weight: 0.10,radius: 9.0, unlock: 3e9,     unlockCost: 1e10,  reqMV: 1, render: 'star' },
     { id: 'void',     name: 'Void-Kristall', color: '#0f0f1f', glow: '#c4b5fd', value: 90e6,    weight: 0.08,radius: 7.4, unlock: 8e9,     unlockCost: 2e10,  reqMV: 2 },
+    { id: 'redgiant', name: 'Roter Riese',   color: '#dc2626', glow: '#f87171', value: 250e6,   weight: 0.06,radius: 11.0, unlock: 2e10,   unlockCost: 6e10,  reqMV: 2, render: 'star' },
     { id: 'chronon',  name: 'Chronon',       color: '#22d3ee', glow: '#67e8f9', value: 700e6,   weight: 0.04,radius: 7.8, unlock: 6e10,    unlockCost: 1.5e11,reqMV: 3 },
+    { id: 'neutron*', name: 'Neutronenstern',color: '#e0e7ff', glow: '#a5b4fc', value: 2e9,     weight: 0.025,radius:8.6, unlock: 2e11,    unlockCost: 6e11,  reqMV: 3, render: 'pulsar' },
     { id: 'singulon', name: 'Singulon',      color: '#e879f9', glow: '#f0abfc', value: 5.4e9,   weight: 0.02,radius: 8.2, unlock: 4e11,    unlockCost: 1e12,  reqMV: 4 },
+    { id: 'quarkstar',name: 'Quark-Stern',   color: '#84cc16', glow: '#a3e635', value: 15e9,    weight: 0.015,radius:9.4, unlock: 1e12,    unlockCost: 3e12,  reqMV: 4, render: 'exotic' },
     { id: 'urphoton', name: 'Ur-Photon',     color: '#fef08a', glow: '#fef9c3', value: 42e9,    weight: 0.01,radius: 8.6, unlock: 3e12,    unlockCost: 8e12,  reqMV: 5 },
+    { id: 'magnetar', name: 'Magnetar',      color: '#7dd3fc', glow: '#38bdf8', value: 120e9,   weight: 0.008,radius:9.8, unlock: 8e12,    unlockCost: 2.5e13,reqMV: 5, render: 'pulsar' },
     { id: 'metabos',  name: 'Meta-Boson',    color: '#fecaca', glow: '#fca5a5', value: 340e9,   weight: 0.005,radius:9.2, unlock: 2e13,    unlockCost: 6e13,  reqMV: 6 },
+    { id: 'minibh',   name: 'Mini-Schwarzloch',color:'#000000',glow: '#a78bfa', value: 1e12,    weight: 0.003,radius:12.0, unlock: 6e13,   unlockCost: 2e14,  reqMV: 6, render: 'blackhole' },
 ];
 
 const typeById = Object.fromEntries(PARTICLE_TYPES.map(t => [t.id, t]));
@@ -1035,17 +1050,11 @@ function render() {
 
     for (const p of runtime.particles) {
         const t = p.type;
-        // Glow
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, t.radius * 3.5);
-        grad.addColorStop(0, t.glow);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.globalAlpha = 0.55;
-        ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 3.5, 0, Math.PI * 2); ctx.fill();
-        // Core
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = t.color;
-        ctx.beginPath(); ctx.arc(p.x, p.y, t.radius, 0, Math.PI * 2); ctx.fill();
+        if      (t.render === 'star')      drawStarBody(ctx, p);
+        else if (t.render === 'pulsar')    drawPulsarBody(ctx, p);
+        else if (t.render === 'exotic')    drawExoticBody(ctx, p);
+        else if (t.render === 'blackhole') drawBlackholeBody(ctx, p);
+        else                                drawParticleBody(ctx, p);
     }
     ctx.globalAlpha = 1;
 
@@ -1107,6 +1116,126 @@ function drawGravityField(ctx) {
     grad.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grad;
     ctx.beginPath(); ctx.arc(cx, cy, e.gravReach, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawParticleBody(ctx, p) {
+    const t = p.type;
+    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, t.radius * 3.5);
+    grad.addColorStop(0, t.glow);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 3.5, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = t.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawStarBody(ctx, p) {
+    const t = p.type;
+    // breiter Halo
+    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, t.radius * 5);
+    halo.addColorStop(0, t.glow);
+    halo.addColorStop(0.4, t.glow + '80');
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 5, 0, Math.PI * 2); ctx.fill();
+    // 4 Strahlen kreuzweise
+    ctx.globalAlpha = 0.7;
+    ctx.strokeStyle = t.color;
+    ctx.lineWidth = 1.5;
+    const flare = t.radius * 4;
+    ctx.beginPath();
+    ctx.moveTo(p.x - flare, p.y); ctx.lineTo(p.x + flare, p.y);
+    ctx.moveTo(p.x, p.y - flare); ctx.lineTo(p.x, p.y + flare);
+    ctx.stroke();
+    // Kern
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = t.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius, 0, Math.PI * 2); ctx.fill();
+    // heller Innen-Kern
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 0.45, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawPulsarBody(ctx, p) {
+    const t = p.type;
+    const time = now() / 1000;
+    const angle = (time * 4 + p.life * 2) % (Math.PI * 2);
+    // Halo
+    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, t.radius * 4);
+    halo.addColorStop(0, t.glow);
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 4, 0, Math.PI * 2); ctx.fill();
+    // rotierende Doppel-Beams (Kegel)
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
+    const beamLen = t.radius * 8;
+    const g = ctx.createLinearGradient(0, 0, beamLen, 0);
+    g.addColorStop(0, t.color);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(beamLen, -1.5); ctx.lineTo(beamLen, 1.5); ctx.closePath();
+    ctx.fill();
+    ctx.rotate(Math.PI);
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(beamLen, -1.5); ctx.lineTo(beamLen, 1.5); ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    // dichter Kern
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = t.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 0.5, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawExoticBody(ctx, p) {
+    const t = p.type;
+    // Rainbow-Pulse-Farbe basierend auf life
+    const hue = (p.life * 120 + now() / 20) % 360;
+    const color = `hsl(${hue}, 90%, 65%)`;
+    const glow = `hsl(${hue}, 90%, 75%)`;
+    // Halo
+    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, t.radius * 4);
+    halo.addColorStop(0, glow);
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 4, 0, Math.PI * 2); ctx.fill();
+    // pulsating Kern
+    const pulse = 1 + Math.sin(now() / 120 + p.life * 4) * 0.25;
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * pulse, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawBlackholeBody(ctx, p) {
+    const t = p.type;
+    // Akkretionsscheibe
+    const disk = ctx.createRadialGradient(p.x, p.y, t.radius, p.x, p.y, t.radius * 3);
+    disk.addColorStop(0, t.glow + 'cc');
+    disk.addColorStop(0.5, t.glow + '44');
+    disk.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = disk;
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius * 3, 0, Math.PI * 2); ctx.fill();
+    // Event-Horizon (schwarz)
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = '#000000';
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius, 0, Math.PI * 2); ctx.fill();
+    // dünner Rim
+    ctx.strokeStyle = t.glow;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(p.x, p.y, t.radius + 0.5, 0, Math.PI * 2); ctx.stroke();
 }
 
 function drawGolden(ctx, g) {
